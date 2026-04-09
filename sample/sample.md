@@ -59,7 +59,7 @@ A continuación, se detalla la lógica de los servicios internos. Esta tabla uti
 ## 3. Capturas de Interfaz
 Aquí se simula la inserción de una imagen que originalmente estaba en Base64 y ahora es referenciada de forma optimizada:
 
-![Dashboard del Sistema](assets/img/Markdown-mark.svg)\
+![Dashboard del Sistema](sample/img/Markdown-mark.svg)\
 *Figura 1: Vista previa del panel de administración generado automáticamente.*
 
 ---
