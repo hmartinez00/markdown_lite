@@ -1,0 +1,74 @@
+/* --- CONFIGURACIÓN DE VARIABLES --- */
+:root {
+    /* Modo Claro */
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --border-color: #e1e4e8;
+    --header-bg: #f6f8fa;
+    --container-bg: #ffffff;
+    --link-color: #0366d6;
+}
+
+[data-theme="dark"] {
+    /* Modo Oscuro (GitHub Style) */
+    --bg-color: #0d1117;
+    --text-color: #c9d1d9;
+    --border-color: #30363d;
+    --header-bg: #161b22;
+    --container-bg: #0d1117;
+    --link-color: #58a6ff;
+}
+
+/* --- ESTILOS BASE (Tu layout original) --- */
+body { 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    line-height: 1.6; 
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    max-width: 150vh; 
+    margin: 0 auto; 
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+/* --- CONTENEDOR DEL MARKDOWN --- */
+#visor-markdown { 
+    border: 1px solid var(--border-color); 
+    padding: 30px; 
+    border-radius: 6px; 
+    background-color: var(--container-bg);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* --- ESTILOS DE TABLA (Adaptados) --- */
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-bottom: 1rem; 
+    color: var(--text-color);
+}
+
+th, td { 
+    border: 1px solid var(--border-color); 
+    padding: 8px 12px; 
+}
+
+th { 
+    background-color: var(--header-bg);
+    font-weight: 600;
+}
+
+/* --- OTROS ELEMENTOS DEL MARKDOWN --- */
+a { color: var(--link-color); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+code {
+    background-color: rgba(27,31,35,0.05);
+    padding: 0.2em 0.4em;
+    border-radius: 3px;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+[data-theme="dark"] code {
+    background-color: rgba(240,246,252,0.15);
+}

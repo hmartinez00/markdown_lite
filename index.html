@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="assets/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        /* Estilo rápido para el switch */
+        .theme-switch { position: fixed; top: 20px; right: 20px; z-index: 1000; }
+    </style>
+</head>
+<body>
+
+    <div class="theme-switch">
+        <label>
+            <input type="checkbox" id="toggle-dark"> Modo Oscuro
+        </label>
+    </div>
+
+    <div id="visor-markdown">Cargando...</div>
+
+<script>
+    const btnToggle = document.getElementById('toggle-dark');
+    const visor = document.getElementById('visor-markdown');
+
+    // --- LÓGICA DE TEMA (CLARO/OSCURO) ---
+    btnToggle.addEventListener('change', () => {
+        const theme = btnToggle.checked ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    });
+
+    const currentTheme = localStorage.getItem('theme');
+    if (currentTheme === 'dark') {
+        btnToggle.checked = true;
+        document.documentElement.setAttribute('data-theme', 'dark');
+    }
+
+    // --- LÓGICA DE PERSISTENCIA DE SCROLL ---
+    // Guardar la posición antes de que Live-Server recargue la página
+    window.onbeforeunload = function() {
+        localStorage.setItem('scrollPosition', window.scrollY);
+    };
+
+    async function cargarMarkdown() {
+        try {
+            const respuesta = await fetch('sample.md');
+            if (!respuesta.ok) throw new Error("No se pudo cargar el archivo");
+            
+            const texto = await respuesta.text();
+            
+            // Inyectar el contenido convertido
+            visor.innerHTML = marked.parse(texto);
+
+            // Restaurar el scroll después de que el DOM se haya actualizado
+            const savedScroll = localStorage.getItem('scrollPosition');
+            if (savedScroll) {
+                // El pequeño delay asegura que el contenido ya está renderizado
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: parseInt(savedScroll),
+                        behavior: 'instant' // 'instant' evita saltos visuales lentos al recargar
+                    });
+                }, 50);
+            }
+        } catch (error) {
+            visor.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
+        }
+    }
+
+    // Ejecutar carga inicial
+    cargarMarkdown();
+</script>
+</body>
+</html>
