@@ -104,3 +104,56 @@ main {
 
     main { height: calc(100vh - 180px); padding: 20px 10px; }
 }
+
+/* --- ESTILOS DE TABLA (ESTILO FORMAL) --- */
+table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin: 25px 0; 
+    font-size: 0.95em;
+    color: var(--text-color);
+    /* Línea superior de la tabla */
+    border-top: 2px solid var(--text-color); 
+    border-bottom: 2px solid var(--text-color);
+}
+
+/* Cabeceras (Header) */
+th { 
+    background-color: var(--header-bg);
+    color: var(--text-color);
+    font-weight: 800; /* Negrita extra para los campos */
+    text-align: left;
+    padding: 12px 15px;
+    /* El "hline" debajo de la cabecera */
+    border-bottom: 2px solid var(--text-color); 
+}
+
+/* Celdas de datos */
+td { 
+    padding: 10px 15px;
+    /* hline para cada renglón */
+    border-bottom: 1px solid var(--border-color); 
+}
+
+/* Estilo para el último renglón (opcional) */
+tr:last-child td {
+    border-bottom: none; /* El borde final lo da el 2px del table */
+}
+
+/* Efecto cebra suave para legibilidad en reportes largos */
+tbody tr:nth-of-type(even) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="dark"] tbody tr:nth-of-type(even) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Responsive para tablas */
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto; /* Scroll horizontal si la tabla es muy ancha */
+        white-space: nowrap;
+    }
+}
