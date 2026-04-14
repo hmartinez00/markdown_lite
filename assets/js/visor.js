@@ -1,7 +1,8 @@
 const btnToggle = document.getElementById('toggle-dark');
 const visor = document.getElementById('visor-markdown');
+const mainContainer = document.querySelector('main'); // Referencia al contenedor con scroll
 
-// --- LÓGICA DE TEMA (PERSISTENTE) ---
+// --- LÓGICA DE TEMA ---
 const currentTheme = localStorage.getItem('theme');
 if (currentTheme === 'dark') {
     btnToggle.checked = true;
@@ -14,51 +15,64 @@ btnToggle.addEventListener('change', () => {
     localStorage.setItem('theme', theme);
 });
 
-// --- LÓGICA DE PERSISTENCIA DE SCROLL ---
-window.onbeforeunload = function() {
-    localStorage.setItem('scrollPosition', window.scrollY);
-};
-
-// --- FUNCIÓN NÚCLEO DE CARGA ---
+// --- CARGA DE MARKDOWN ---
 async function cargarMarkdown() {
     try {
-        // 1. Intentar obtener de la URL (?file=archivo.md)
         const params = new URLSearchParams(window.location.search);
-        let ruta = params.get('file');
-
-        // 2. Si no hay en URL, intentar obtener del atributo data-source del HTML
-        if (!ruta) {
-            ruta = visor.getAttribute('data-source');
-        }
-
-        // 3. Si sigue sin haber ruta, definir un fallback (archivo por defecto)
-        if (!ruta) {
-            ruta = 'sample/sample.md';
-        }
-
-        console.log(`Cargando documento: ${ruta}`);
+        let ruta = params.get('file') || visor.getAttribute('data-source') || 'sample/sample.md';
 
         const respuesta = await fetch(ruta);
-        if (!respuesta.ok) throw new Error(`No se pudo encontrar el archivo: ${ruta}`);
+        if (!respuesta.ok) throw new Error(`No se pudo encontrar: ${ruta}`);
         
         const texto = await respuesta.text();
         visor.innerHTML = marked.parse(texto);
 
-        // Restaurar posición del scroll
+        generarTOC();
+
+        // Restaurar scroll en el contenedor MAIN
         const savedScroll = localStorage.getItem('scrollPosition');
         if (savedScroll) {
             setTimeout(() => {
-                window.scrollTo({
-                    top: parseInt(savedScroll),
-                    behavior: 'instant'
-                });
+                mainContainer.scrollTop = parseInt(savedScroll);
             }, 50);
         }
     } catch (error) {
-        visor.innerHTML = `<p style="color:red; border: 1px solid red; padding: 10px;">
-            <strong>Error de carga:</strong> ${error.message}
-        </p>`;
+        visor.innerHTML = `<p style="color:red;">Error: ${error.message}</p>`;
     }
+}
+
+// Guardar scroll del contenedor correcto
+mainContainer.onscroll = function() {
+    localStorage.setItem('scrollPosition', mainContainer.scrollTop);
+};
+
+function generarTOC() {
+    const tocList = document.getElementById('toc-list');
+    tocList.innerHTML = ""; 
+
+    const headers = visor.querySelectorAll('h2, h3');
+
+    headers.forEach((header, index) => {
+        const id = `header-${index}`;
+        header.id = id;
+
+        const li = document.createElement('li');
+        li.className = 'toc-item';
+
+        const a = document.createElement('a');
+        a.href = `#${id}`;
+        a.textContent = header.textContent;
+        a.className = `toc-link ${header.tagName.toLowerCase() === 'h2' ? 'toc-h2' : 'toc-h3'}`;
+
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Scroll suave relativo al contenedor MAIN
+            header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        li.appendChild(a);
+        tocList.appendChild(li);
+    });
 }
 
 cargarMarkdown();

@@ -2,12 +2,9 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrbitView MD - ABAE</title>
     <link rel="stylesheet" href="assets/css/styles.css">
-    <!-- <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> -->
-    <style>
-        /* Estilo rápido para el switch */
-        .theme-switch { position: fixed; top: 20px; right: 20px; z-index: 1000; }
-    </style>
 </head>
 <body>
 
@@ -17,7 +14,14 @@
         </label>
     </div>
 
-    <div id="visor-markdown" data-source="">Cargando...</div>
+    <nav id="toc-container">
+        <h4>Contenido</h4>
+        <ul id="toc-list" class="toc-list"></ul>
+    </nav>
+
+    <main>
+        <div id="visor-markdown" data-source="sample/sample.md">Cargando...</div>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="assets/js/visor.js"></script>
